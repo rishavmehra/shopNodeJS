@@ -1,25 +1,22 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const expressHbs = require('express-handlebars')
 
 const app = express();
 
 app.set('view engine', 'ejs'); // here, we wanna compile dynamic tamplate with "pug" engine 
 app.set('views', 'views'); // where pug(engine) find this tamplates
 
-const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const rootdir = require('./utils/path');
+const errorController = require('./controllers/error')
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public'))) // this is for css
-app.use('/admin', adminData.routes);
+
+app.use('/admin', adminRoutes);
 app.use(shopRoutes);    // This is a middleware function
 
-app.use((req,res, next) =>{
-    res.status(404).render('404', {pageTitle: "NOT FOUND "})
-})
+app.use(errorController.get404)
 
-app.listen(3001);
-
+app.listen(3000);
