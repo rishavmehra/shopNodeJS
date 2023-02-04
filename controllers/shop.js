@@ -2,48 +2,51 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => { // This is the controller for the products page
-  Product.fetchAll()
-  .then(([rows, fieldData]) => {  
-    res.render('shop/product-list', { // This is the view for the products page
-      prods: rows,
-      pageTitle: 'All Products',
-      path: '/products'
-    });
-  })
-  .catch(err => console.log(err));
-  
+  Product.findAll()
+    .then(product => {
+      res.render('shop/product-list', { // This is the view for the products page
+        prods: product,
+        pageTitle: 'All Products',
+        path: '/products'
+      });
+    })
+    .catch(err => console.log(err))  
 };
 
 exports.getProduct = (req, res, next) => { // This is the controller for the product detail page
   const prodId = req.params.productId;
-  Product
-    .findById(prodId)
+  // Product.findAll({ where: { id: prodId } })
+  //   .then(products => {
+  //     res.render('shop/product-detail', {
+  //       product: products[0],
+  //       pageTitle: products[0].title,
+  //       path: '/products'
+  //     });
+  //   })
+  //   .catch(err => console.log(err));
+  Product.findByPk(prodId) //replace findById with findByPk
     .then(
-      ([product]) => {
+      product => {
         console.log(product);
         res.render('shop/product-detail', {
-          product: product[0],
+          product: product,
           pageTitle: product.title,
           path: '/products'
         });
       })
     .catch(err => console.log(err));
-  
 };
 
-
-
 exports.getIndex = (req, res, next) => { // This is the controller for the index page
-  Product.fetchAll() // this the promise that gets the product data
-    .then(([rows, fieldData]) => {  
+  Product.findAll()
+    .then(product => {
       res.render('shop/index', {
-        prods: rows,
+        prods: product,
         pageTitle: 'Shop',
         path: '/'
       });
     })
-    .catch(err => console.log(err));
-    
+    .catch(err => console.log(err))    
 };
 
 exports.getCart = (req, res, next) => { // This is the controller for the cart page
