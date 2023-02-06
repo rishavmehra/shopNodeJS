@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const Order = require('../models/order');
 
 exports.getProducts = (req, res, next) => { // This is the controller for the products page
-  Product.findAll()
+  Product.fetchAll()
     .then(product => {
       res.render('shop/product-list', { // This is the view for the products page
         prods: product,
@@ -24,7 +24,7 @@ exports.getProduct = (req, res, next) => { // This is the controller for the pro
   //     });
   //   })
   //   .catch(err => console.log(err));
-  Product.findByPk(prodId) //replace findById with findByPk
+  Product.findById(prodId) //replace findById with findByPk
     .then(
       product => {
         console.log(product);
@@ -38,7 +38,7 @@ exports.getProduct = (req, res, next) => { // This is the controller for the pro
 };
 
 exports.getIndex = (req, res, next) => { // This is the controller for the index page
-  Product.findAll()
+  Product.fetchAll()
     .then(product => {
       res.render('shop/index', {
         prods: product,
